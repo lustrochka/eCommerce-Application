@@ -8,7 +8,8 @@
     "build": "webpack --config ./webpack.config.js --env mode=prod",
     "lint": "eslint . --ext .ts",
     "format": "npx prettier . --write",
-    "check": "npx prettier . --check"
+    "check": "npx prettier . --check",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
@@ -33,6 +34,7 @@
     "filemanager-webpack-plugin": "^8.0.0",
     "html-loader": "^4.2.0",
     "html-webpack-plugin": "^5.5.2",
+    "husky": "^8.0.3",
     "mini-css-extract-plugin": "^2.7.6",
     "node-sass": "^9.0.0",
     "nodemon": "^2.0.22",
