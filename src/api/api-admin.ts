@@ -1,4 +1,3 @@
-import fetch from 'node-fetch';
 import { ClientBuilder, type AuthMiddlewareOptions, type HttpMiddlewareOptions } from '@commercetools/sdk-client-v2';
 
 // Configure authMiddlewareOptions
