@@ -1,4 +1,4 @@
-import { createCustomer, setName } from '../../../api/api-SPA';
+import { createCustomer } from '../../../api/api-SPA';
 import { getDomElement } from '../../../check-element';
 
 const INPUTS: { [key: string]: string[] } = {
@@ -47,7 +47,7 @@ export function renderRegistrationPage() {
   page.appendChild(form);
   let item: keyof typeof INPUTS;
   for (item in INPUTS) {
-    const text = item.replace('-', ' ');
+    const text = item.split('-').join(' ');
 
     const label = document.createElement('label');
     label.setAttribute('for', `${item}`);
@@ -135,18 +135,24 @@ function checkAge(value: string) {
 function registerCustomer(event: Event, form: HTMLFormElement) {
   event.preventDefault();
   const data = new FormData(form);
+  const dataArray = [];
   const email = data.get('Email')?.toString();
+  if (email) dataArray.push(email);
   const pass = data.get('Password')?.toString();
+  if (pass) dataArray.push(pass);
   const firstName = data.get('First Name')?.toString();
+  if (firstName) dataArray.push(firstName);
   const lastName = data.get('Last Name')?.toString();
+  if (lastName) dataArray.push(lastName);
+  const birthDate = data.get('Date of birth')?.toString();
+  if (birthDate) dataArray.push(birthDate);
   let response;
   if (email && pass && firstName && lastName) {
-    response = createCustomer(email, pass);
+    response = createCustomer(dataArray);
     response
       .then(({ body }) => {
         const id = body.customer.id;
         console.log(id);
-        setName(id, firstName, lastName);
       })
       .catch(console.error);
   }

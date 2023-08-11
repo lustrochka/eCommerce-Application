@@ -30,13 +30,16 @@ export const ctpClient = new ClientBuilder()
 const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({ projectKey: 'random-team-inc' });
 apiRoot.shoppingLists().get();
 
-export async function createCustomer(email: string, name: string) {
+export async function createCustomer(dataArray: string[]) {
   const result = await apiRoot
     .customers()
     .post({
       body: {
-        email: email,
-        password: name,
+        email: dataArray[0],
+        password: dataArray[1],
+        firstName: dataArray[2],
+        lastName: dataArray[3],
+        dateOfBirth: dataArray[4],
       },
     })
     .execute();
@@ -44,7 +47,7 @@ export async function createCustomer(email: string, name: string) {
   return result;
 }
 
-export function setName(id: string, firstName: string, lastName: string) {
+/*export function setName(id: string, firstName: string, lastName: string) {
   apiRoot
     .customers()
     .withId({ ID: id })
@@ -64,4 +67,4 @@ export function setName(id: string, firstName: string, lastName: string) {
       },
     })
     .execute();
-}
+}*/
