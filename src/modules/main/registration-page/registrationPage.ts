@@ -1,3 +1,4 @@
+import { createCustomer, setName } from '../../../api/api-SPA';
 import { getDomElement } from '../../../check-element';
 
 const INPUTS: { [key: string]: string[] } = {
@@ -56,6 +57,7 @@ export function renderRegistrationPage() {
     const input = document.createElement('input');
     input.classList.add('registration-input');
     input.setAttribute('id', `${item}`);
+    input.setAttribute('name', `${text}`);
     input.required = true;
     form.appendChild(input);
     if (item == 'Date-of-birth') {
@@ -86,11 +88,12 @@ export function renderRegistrationPage() {
   const countryInput = document.createElement('select');
   countryInput.classList.add('registration-input');
   countryInput.setAttribute('id', 'country');
+  countryInput.setAttribute('name', 'Country');
   countryInput.required = true;
   form.appendChild(countryInput);
   countryInput.addEventListener('change', () => {
     const code = getDomElement<HTMLInputElement>('#Postal-Code');
-    code?.setAttribute('pattern', `${COUNTRIES[countryInput.value][0]}`);
+    code.setAttribute('pattern', `${COUNTRIES[countryInput.value][0]}`);
     code.placeholder = `${COUNTRIES[countryInput.value][1]}`;
   });
 
@@ -106,6 +109,10 @@ export function renderRegistrationPage() {
   button.textContent = 'Register';
   button.setAttribute('type', 'submit');
   form.appendChild(button);
+
+  form.addEventListener('submit', (e) => {
+    registerCustomer(e, form);
+  });
 
   return page;
 }
@@ -123,4 +130,24 @@ function checkAge(value: string) {
     }
   }
   return now.getFullYear() - birthDate.getFullYear() > 13;
+}
+
+function registerCustomer(event: Event, form: HTMLFormElement) {
+  event.preventDefault();
+  const data = new FormData(form);
+  const email = data.get('Email')?.toString();
+  const pass = data.get('Password')?.toString();
+  const firstName = data.get('First Name')?.toString();
+  const lastName = data.get('Last Name')?.toString();
+  let response;
+  if (email && pass && firstName && lastName) {
+    response = createCustomer(email, pass);
+    response
+      .then(({ body }) => {
+        const id = body.customer.id;
+        console.log(id);
+        setName(id, firstName, lastName);
+      })
+      .catch(console.error);
+  }
 }

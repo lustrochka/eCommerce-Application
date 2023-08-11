@@ -29,3 +29,39 @@ export const ctpClient = new ClientBuilder()
 
 const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({ projectKey: 'random-team-inc' });
 apiRoot.shoppingLists().get();
+
+export async function createCustomer(email: string, name: string) {
+  const result = await apiRoot
+    .customers()
+    .post({
+      body: {
+        email: email,
+        password: name,
+      },
+    })
+    .execute();
+  console.log(result);
+  return result;
+}
+
+export function setName(id: string, firstName: string, lastName: string) {
+  apiRoot
+    .customers()
+    .withId({ ID: id })
+    .post({
+      body: {
+        version: 1,
+        actions: [
+          {
+            action: 'setFirstName',
+            firstName: firstName,
+          },
+          {
+            action: 'setLastName',
+            lastName: lastName,
+          },
+        ],
+      },
+    })
+    .execute();
+}
