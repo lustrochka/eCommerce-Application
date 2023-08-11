@@ -5,3 +5,15 @@ html {
   font-size: $font-size;
   color: $font-color;
 }
+
+.registration-page {
+  text-align: center;
+}
+
+.registration-form {
+  max-width: 300px;
+  margin: 0 auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
