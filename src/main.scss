@@ -6,11 +6,11 @@ html {
   color: $font-color;
 }
 
-.registration-page {
+.registration-page, .login-page {
   text-align: center;
 }
 
-.registration-form {
+.registration-form, .login-form {
   max-width: 300px;
   margin: 0 auto;
   text-align: center;
