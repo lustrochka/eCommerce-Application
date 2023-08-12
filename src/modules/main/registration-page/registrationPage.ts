@@ -92,7 +92,7 @@ export function renderRegistrationPage() {
   countryInput.required = true;
   form.appendChild(countryInput);
   countryInput.addEventListener('change', () => {
-    const code = getDomElement<HTMLInputElement>('#Postal-Code');
+    const code = getDomElement<HTMLInputElement>('#Postal-Code', form);
     code.setAttribute('pattern', `${COUNTRIES[countryInput.value][0]}`);
     code.placeholder = `${COUNTRIES[countryInput.value][1]}`;
   });
@@ -109,6 +109,11 @@ export function renderRegistrationPage() {
   button.textContent = 'Register';
   button.setAttribute('type', 'submit');
   form.appendChild(button);
+
+  const errorMsg = document.createElement('div');
+  errorMsg.classList.add('error-message');
+  errorMsg.textContent = 'There is already an existing customer with the provided email.';
+  form.appendChild(errorMsg);
 
   form.addEventListener('submit', (e) => {
     registerCustomer(e, form);
@@ -154,6 +159,8 @@ function registerCustomer(event: Event, form: HTMLFormElement) {
         const id = body.customer.id;
         console.log(id);
       })
-      .catch(console.error);
+      .catch(() => {
+        getDomElement('.error-message', form).classList.add('visible');
+      });
   }
 }

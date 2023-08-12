@@ -17,3 +17,11 @@ html {
   display: flex;
   flex-direction: column;
 }
+
+.error-message {
+  display: none;
+}
+
+.visible {
+  display: block;
+}
