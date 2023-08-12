@@ -18,6 +18,10 @@ html {
   flex-direction: column;
 }
 
+.adresses-block {
+  display: flex;
+}
+
 .error-message {
   display: none;
 }
