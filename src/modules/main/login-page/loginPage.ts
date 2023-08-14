@@ -58,11 +58,14 @@ export function renderLoginPage() {
   button.setAttribute('type', 'submit');
   form.appendChild(button);
 
+  const link = document.createElement('a');
+  link.href = '#registration';
+  page.appendChild(link);
+
   const navButton = document.createElement('button');
   navButton.classList.add('navigation-button');
   navButton.textContent = 'Registration';
-  navButton.setAttribute('data-direction', 'registration');
-  page.appendChild(navButton);
+  link.appendChild(navButton);
 
   return page;
 }

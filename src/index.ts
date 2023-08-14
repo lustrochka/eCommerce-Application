@@ -1,5 +1,4 @@
 import './main.scss';
-import { renderRegistrationPage } from './modules/main/registration-page/registrationPage';
+import { routing } from './routing/routing';
 
-const body = document.querySelector('body');
-body?.appendChild(renderRegistrationPage());
+routing();

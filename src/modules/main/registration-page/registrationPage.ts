@@ -76,6 +76,15 @@ export function renderRegistrationPage() {
     registerCustomer(e, form);
   });
 
+  const link = document.createElement('a');
+  link.href = '#login';
+  page.appendChild(link);
+
+  const navButton = document.createElement('button');
+  navButton.classList.add('navigation-button');
+  navButton.textContent = 'Sign in';
+  link.appendChild(navButton);
+
   return page;
 }
 
