@@ -106,13 +106,13 @@ function renderInput(value: string, valuesArr: { [key: string]: string[] }) {
   input.setAttribute('id', `${value}`);
   input.setAttribute('name', `${text}`);
   input.required = true;
-  if (value == 'Date-of-birth') {
+  if (value === 'Date-of-birth') {
     input.setAttribute('type', 'date');
     input.addEventListener('change', () => {
       const message = checkAge(input.value) ? '' : `${valuesArr['Date-of-birth'][1]}`;
       input.setCustomValidity(message);
     });
-  } else if (value == 'Postal-Code') {
+  } else if (value === 'Postal-Code') {
     input.setAttribute('pattern', `${COUNTRIES['Belarus'][0]}`);
     input.placeholder = `${COUNTRIES['Belarus'][1]}`;
   } else {
@@ -172,7 +172,7 @@ function renderAdress(type: string) {
   }
 
   adressBlock.appendChild(renderCheckbox(type, 'Set as default adress'));
-  if (type == 'shipping') {
+  if (type === 'shipping') {
     const checkbox = renderCheckbox('both', 'Set as billing adress');
     adressBlock.appendChild(checkbox);
   }
@@ -199,10 +199,10 @@ function renderCheckbox(type: string, text: string) {
 function checkAge(value: string) {
   const now = new Date();
   const birthDate = new Date(value);
-  if (now.getFullYear() - birthDate.getFullYear() == 13) {
+  if (now.getFullYear() - birthDate.getFullYear() === 13) {
     if (now.getMonth() > birthDate.getMonth()) {
       return true;
-    } else if (now.getMonth() == birthDate.getMonth()) {
+    } else if (now.getMonth() === birthDate.getMonth()) {
       if (now.getDate() >= birthDate.getDate()) {
         return true;
       }
