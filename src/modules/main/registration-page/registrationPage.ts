@@ -106,7 +106,7 @@ function renderInput(value: string, valuesArr: { [key: string]: string[] }) {
   input.setAttribute('id', `${value}`);
   input.setAttribute('name', `${text}`);
   input.required = true;
-  if (value == 'Date-of-birth') {
+  if (value === 'Date-of-birth') {
     input.setAttribute('type', 'date');
     input.addEventListener('change', () => {
       const message = checkAge(input.value) ? '' : `${valuesArr['Date-of-birth'][1]}`;
