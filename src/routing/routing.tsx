@@ -10,7 +10,7 @@ export function Routing() {
     <div>
       <HashRouter>
         <Routes>
-          <Route path="/" element={<MainPage />} />
+          <Route exact path="/" element={<MainPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/registration" element={<RegistrationPage />} />
           <Route path="*" element={<NotFound />} />
