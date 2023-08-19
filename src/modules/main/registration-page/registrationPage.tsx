@@ -6,7 +6,7 @@ import {
 } from '@commercetools/platform-sdk';
 import { createCustomer, getCustomer, setDefaultAdress } from '../../../api/api-admin';
 import React, { ChangeEvent, FormEvent, useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 
 export function RegistrationPage() {
   const INPUTS = [
@@ -69,6 +69,7 @@ export function RegistrationPage() {
   const [checkedBoth, setCheckedBoth] = useState(false);
   const [value, setValue] = useState('Belarus');
   const [value2, setValue2] = useState('Belarus');
+  const navigate = useNavigate();
   let id: string;
 
   function changeHandler(index: number, event: ChangeEvent<HTMLInputElement>) {
@@ -200,6 +201,7 @@ export function RegistrationPage() {
             }
           });
         }
+        navigate('/');
       })
       .catch(() => {
         setClasslist('error-message visible');
