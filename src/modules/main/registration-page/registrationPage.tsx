@@ -6,6 +6,7 @@ import {
 } from '@commercetools/platform-sdk';
 import { createCustomer, getCustomer, setDefaultAdress } from '../../../api/api-admin';
 import React, { ChangeEvent, FormEvent, useState } from 'react';
+import { NavLink } from 'react-router-dom';
 
 export function RegistrationPage() {
   const INPUTS = [
@@ -338,6 +339,9 @@ export function RegistrationPage() {
           Register
         </button>
         <div className={classlist}>There is already an existing customer with the provided email.</div>
+        <NavLink to="/login">
+          <button className="nav-button">Login</button>
+        </NavLink>
       </form>
     </div>
   );
