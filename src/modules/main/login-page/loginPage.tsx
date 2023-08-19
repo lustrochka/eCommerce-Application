@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { NavLink } from 'react-router-dom';
 
 const INPUTS = [
   {name: 'Email', pattern: '[^@\\s]+@[^@\\s]+\\.[^@\\s]+', msg: 'A email address should be properly formatted (e.g., example@email.com)', 
@@ -41,9 +42,9 @@ export function LoginPage() {
           Sign in
         </button>
       </form>
-      <button className='navigation-button'>
-          Registration
-        </button>
+      <NavLink to="/registration">
+        <button className="navigation-button">Registration</button>
+      </NavLink>
     </div>
   );
 }
