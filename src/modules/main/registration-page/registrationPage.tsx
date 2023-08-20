@@ -5,7 +5,7 @@ import {
   CustomerUpdateAction,
 } from '@commercetools/platform-sdk';
 import { createCustomer, getCustomer, setDefaultAdress } from '../../../api/api-admin';
-import React, { ChangeEvent, FormEvent, useState } from 'react';
+import React, { ChangeEvent, FormEvent, useState, useRef } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 
 export function RegistrationPage() {
@@ -38,9 +38,9 @@ export function RegistrationPage() {
   ];
 
   const COUNTRIES = [
-    { name: 'Belarus', pattern: '2[1-4][0-7]\\d{3}', placeholder: '220000' },
-    { name: 'Poland', pattern: '\\d{2}-\\d{3}', placeholder: '00-000' },
-    { name: 'Russia', pattern: '[1-9]\\d{5}', placeholder: '101000' },
+    { name: 'Belarus', pattern: '2[1-4][0-7]\\d{3}', placeholder: '220000', reg: /^2[1-4][0-7]\d{3}$/ },
+    { name: 'Poland', pattern: '\\d{2}-\\d{3}', placeholder: '00-000', reg: /^\d{2}-\d{3}$/ },
+    { name: 'Russia', pattern: '[1-9]\\d{5}', placeholder: '101000', reg: /^[1-9]\d{5}$/ },
   ];
 
   const ADRESS_ITEMS = [
@@ -51,8 +51,9 @@ export function RegistrationPage() {
       msg: 'City must contain at least one character and no special characters or numbers',
       placeholder: 'Minsk',
     },
-    { name: 'Postal-Code', msg: 'Postal code must follow the format for the country' },
   ];
+
+  const codeInfo = { name: 'Postal-Code', msg: 'Postal code must follow the format for the country' };
 
   const indexes: { [key: string]: number } = { Belarus: 0, Poland: 1, Russia: 2 };
 
@@ -69,6 +70,8 @@ export function RegistrationPage() {
   const [checkedBoth, setCheckedBoth] = useState(false);
   const [value, setValue] = useState('Belarus');
   const [value2, setValue2] = useState('Belarus');
+  const codeInput = useRef<HTMLInputElement>(null);
+  const codeInput2 = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
   let id: string;
 
@@ -123,8 +126,8 @@ export function RegistrationPage() {
           required
           value={adresses[index]}
           type="text"
-          pattern={item.name === 'Postal-Code' ? pattern : item.pattern}
-          placeholder={item.name === 'Postal-Code' ? placeholder : item.placeholder}
+          pattern={item.pattern}
+          placeholder={item.placeholder}
           onChange={(e) => {
             changeShippingAdress(index, e);
             const message = e.target.validity.patternMismatch ? `${item.msg}` : '';
@@ -146,8 +149,8 @@ export function RegistrationPage() {
           required
           value={adresses2[index]}
           type="text"
-          pattern={item.name === 'Postal-Code' ? pattern2 : item.pattern}
-          placeholder={item.name === 'Postal-Code' ? placeholder2 : item.placeholder}
+          pattern={pattern2}
+          placeholder={placeholder2}
           onChange={(e) => {
             changeBillingAdress(index, e);
             const message = e.target.validity.patternMismatch ? `${item.msg}` : '';
@@ -165,6 +168,27 @@ export function RegistrationPage() {
       </>
     );
   });
+
+  const PostalCode = (type: string) => {
+    return (
+      <input
+        className="registration-input"
+        id="Postal-Code"
+        name="Postal Code"
+        required
+        value={type === 'shipping' ? adresses[2] : adresses2[2]}
+        type="text"
+        ref={type === 'shipping' ? codeInput : codeInput2}
+        pattern={type === 'shipping' ? pattern : pattern2}
+        placeholder={type === 'shipping' ? placeholder : placeholder2}
+        onChange={(e) => {
+          type === 'shipping' ? changeShippingAdress(2, e) : changeBillingAdress(2, e);
+          const message = e.target.validity.patternMismatch ? `${codeInfo.msg}` : '';
+          e.target.setCustomValidity(message);
+        }}
+      />
+    );
+  };
 
   function checkAge(value: string) {
     const now = new Date();
@@ -262,6 +286,8 @@ export function RegistrationPage() {
           <div className="adress-block" id="shipping-adress">
             <div className="adress-title">Shipping-adress</div>
             {adressArr}
+            <label htmlFor="Postal-Code">Postal Code</label>
+            {PostalCode('shipping')}
             <label htmlFor="shipping-country">Country</label>
             <select
               className="registration-input"
@@ -273,6 +299,11 @@ export function RegistrationPage() {
                 setValue(e.target.value);
                 setPattern(COUNTRIES[indexes[e.target.value]].pattern);
                 setPlaceholder(COUNTRIES[indexes[e.target.value]].placeholder);
+                if (COUNTRIES[indexes[e.target.value]].reg.test(adresses2[2])) {
+                  if (codeInput.current) codeInput.current.setCustomValidity('');
+                } else {
+                  if (codeInput.current) codeInput.current.setCustomValidity(codeInfo.msg);
+                }
               }}
             >
               {options}
@@ -310,6 +341,8 @@ export function RegistrationPage() {
           <div className="adress-block" id="billing-adress">
             <div className="adress-title">Billing-adress</div>
             {adressArrBilling}
+            <label htmlFor="Postal-Code">Postal Code</label>
+            {PostalCode('billing')}
             <label htmlFor="billing-country">Country</label>
             <select
               className="registration-input"
@@ -320,6 +353,11 @@ export function RegistrationPage() {
                 setValue2(e.target.value);
                 setPattern2(COUNTRIES[indexes[e.target.value]].pattern);
                 setPlaceholder2(COUNTRIES[indexes[e.target.value]].placeholder);
+                if (COUNTRIES[indexes[e.target.value]].reg.test(adresses2[2])) {
+                  if (codeInput2.current) codeInput2.current.setCustomValidity('');
+                } else {
+                  if (codeInput2.current) codeInput2.current.setCustomValidity(codeInfo.msg);
+                }
               }}
             >
               {options}
