@@ -39,7 +39,7 @@ const baseConfig = {
     ],
   },
   resolve: {
-    extensions: ['.ts', '.js'],
+    extensions: ['.ts', '.js', '.tsx'],
   },
   plugins: [
     new HtmlWebpackPlugin({
