@@ -149,8 +149,8 @@ export function RegistrationPage() {
           required
           value={adresses2[index]}
           type="text"
-          pattern={pattern2}
-          placeholder={placeholder2}
+          pattern={item.pattern}
+          placeholder={item.placeholder}
           onChange={(e) => {
             changeBillingAdress(index, e);
             const message = e.target.validity.patternMismatch ? `${item.msg}` : '';
