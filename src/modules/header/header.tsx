@@ -1,49 +1,93 @@
+import React from 'react';
+import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom';
+import { useState } from 'react';
+import { LoginPage } from '../main/login-page/loginPage';
+import { RegistrationPage } from '../main/registration-page/registrationPage';
 import './header.scss';
+import { MainPage } from '../main/main-page/mainPage';
 
-export const links = [
+type link = {
+  text: string;
+  path: string;
+  element: React.JSX.Element;
+};
+
+const linksArr: link[] = [
+  {
+    text: 'Main',
+    path: '/',
+    element: <MainPage />,
+  },
   {
     text: 'Catalog',
-    href: '#',
+    path: '/',
+    element: <MainPage />,
   },
   {
     text: 'Basket',
-    href: '#',
+    path: '/',
+    element: <MainPage />,
   },
   {
     text: 'About us',
-    href: '#',
+    path: '/',
+    element: <MainPage />,
+  },
+];
+const loginArr: link[] = [
+  {
+    text: 'Login',
+    path: '/login',
+    element: <LoginPage />,
+  },
+  {
+    text: 'Registration',
+    path: '/registration',
+    element: <RegistrationPage />,
   },
 ];
 
-export const renderHeader = () => {
-  const body = document.body;
-  const headerWrap = document.createElement('div');
-  headerWrap.classList.add('header-wrap');
-  body.append(headerWrap);
-  const header = document.createElement('header');
-  header.classList.add('header');
-  body.append(header);
-
-  const nav = document.createElement('nav');
-  nav.classList.add('nav');
-  header.append(nav);
-
-  const list = document.createElement('ul');
-  list.classList.add('nav-wrap');
-  nav.append(list);
-
-  links.forEach((item) => createNavLink(list, item.text, item.href));
+export const Header = () => {
+  const [isLogin, setLogin] = useState(false);
+  const userName = 'User';
+  return (
+    <header className="header">
+      <nav>
+        <BrowserRouter>
+          <NavLink to="/">Main</NavLink>
+          <NavLink to="/">Catalog</NavLink>
+          <NavLink to="/">About Us</NavLink>
+          <NavLink to="/">Basket</NavLink>
+          <Routes>
+            {linksArr.map((item, index) => (
+              <Route path={item.path} element={item.element} key={index} />
+            ))}
+          </Routes>
+        </BrowserRouter>
+      </nav>
+      <div className="login-container">
+        {isLogin ? (
+          <span>Hi, {userName} </span>
+        ) : (
+          <BrowserRouter>
+            <NavLink to="/login">Login</NavLink>
+            <NavLink to="/registration">Registration</NavLink>
+            <Routes>
+              {loginArr.map((item, index) => (
+                <Route path={item.path} element={item.element} key={index} />
+              ))}
+            </Routes>
+          </BrowserRouter>
+        )}
+      </div>
+    </header>
+  );
 };
 
-export function createNavLink(parent: HTMLElement, text: string, href: string) {
-  const li = document.createElement('li');
-  li.classList.add('link-wrap');
-  parent.append(li);
-
-  const link = document.createElement('a');
-  link.classList.add('link');
-  link.innerText = text;
-  link.href = href;
-
-  li.append(link);
-}
+export const createNavLinks = (list: link[]) => {
+  return list.map((item, index) => (
+    <NavLink to={item.path} key={index}>
+      {item.text}
+    </NavLink>
+  ));
+};
