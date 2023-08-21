@@ -1,12 +1,14 @@
 import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './modules/App/App';
+
 import './main.scss';
-import { createRoot } from 'react-dom/client';
-import { Routing } from './routing/routing';
-
-function NavigationBar() {
-  return <h1>Hello from React!</h1>;
-}
-
-const domNode = document.body;
-const root = createRoot(domNode);
-root.render(<Routing />);
+const entry = document.createElement('div');
+entry.id = 'root';
+document.body.append(entry);
+const root = ReactDOM.createRoot(entry);
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
