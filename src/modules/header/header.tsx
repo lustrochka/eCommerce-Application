@@ -20,17 +20,17 @@ export const linksArr: link[] = [
   },
   {
     text: 'Catalog',
-    path: '/',
+    path: '/catalog',
     element: <MainPage />,
   },
   {
     text: 'Basket',
-    path: '/',
+    path: '/basket',
     element: <MainPage />,
   },
   {
     text: 'About us',
-    path: '/',
+    path: '/about',
     element: <MainPage />,
   },
 ];
@@ -53,18 +53,30 @@ export const Header = () => {
   return (
     <header className="header">
       <nav>
-        <NavLink to="/">Main</NavLink>
-        <NavLink to="/">Catalog</NavLink>
-        <NavLink to="/">About Us</NavLink>
-        <NavLink to="/">Basket</NavLink>
+        <NavLink to="/" className="link">
+          Main
+        </NavLink>
+        <NavLink to="/catalog" className="link">
+          Catalog
+        </NavLink>
+        <NavLink to="/about" className="link">
+          About Us
+        </NavLink>
+        <NavLink to="/basket" className="link">
+          Basket
+        </NavLink>
       </nav>
       <div className="login-container">
         {isLogin ? (
           <span>Hi, {userName} </span>
         ) : (
           <>
-            <NavLink to="/login">Login</NavLink>
-            <NavLink to="/registration">Registration</NavLink>
+            <NavLink to="/login" className="link">
+              Login
+            </NavLink>
+            <NavLink to="/registration" className="link">
+              Registration
+            </NavLink>
           </>
         )}
       </div>
