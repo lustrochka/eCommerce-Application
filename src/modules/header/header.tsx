@@ -12,7 +12,7 @@ type link = {
   element: React.JSX.Element;
 };
 
-const linksArr: link[] = [
+export const linksArr: link[] = [
   {
     text: 'Main',
     path: '/',
@@ -20,21 +20,21 @@ const linksArr: link[] = [
   },
   {
     text: 'Catalog',
-    path: '/',
+    path: '/catalog',
     element: <MainPage />,
   },
   {
     text: 'Basket',
-    path: '/',
+    path: '/basket',
     element: <MainPage />,
   },
   {
     text: 'About us',
-    path: '/',
+    path: '/about',
     element: <MainPage />,
   },
 ];
-const loginArr: link[] = [
+export const loginArr: link[] = [
   {
     text: 'Login',
     path: '/login',
@@ -53,31 +53,31 @@ export const Header = () => {
   return (
     <header className="header">
       <nav>
-        <BrowserRouter>
-          <NavLink to="/">Main</NavLink>
-          <NavLink to="/">Catalog</NavLink>
-          <NavLink to="/">About Us</NavLink>
-          <NavLink to="/">Basket</NavLink>
-          <Routes>
-            {linksArr.map((item, index) => (
-              <Route path={item.path} element={item.element} key={index} />
-            ))}
-          </Routes>
-        </BrowserRouter>
+        <NavLink to="/" className="link">
+          Main
+        </NavLink>
+        <NavLink to="/catalog" className="link">
+          Catalog
+        </NavLink>
+        <NavLink to="/about" className="link">
+          About Us
+        </NavLink>
+        <NavLink to="/basket" className="link">
+          Basket
+        </NavLink>
       </nav>
       <div className="login-container">
         {isLogin ? (
           <span>Hi, {userName} </span>
         ) : (
-          <BrowserRouter>
-            <NavLink to="/login">Login</NavLink>
-            <NavLink to="/registration">Registration</NavLink>
-            <Routes>
-              {loginArr.map((item, index) => (
-                <Route path={item.path} element={item.element} key={index} />
-              ))}
-            </Routes>
-          </BrowserRouter>
+          <>
+            <NavLink to="/login" className="link">
+              Login
+            </NavLink>
+            <NavLink to="/registration" className="link">
+              Registration
+            </NavLink>
+          </>
         )}
       </div>
     </header>

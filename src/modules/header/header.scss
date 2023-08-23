@@ -1,0 +1,39 @@
+.header{
+  padding-top: 5px;
+  margin: 0 auto;
+  max-width: 1200px;
+  display: flex;
+  gap: 100px;
+  justify-content: center;
+  font-size: 2rem;
+}
+
+nav{
+  display: flex;
+  gap: 20px;
+}
+
+.login-container{
+  display: flex;
+  gap: 20px;
+}
+
+.link{
+  font-family: sans-serif;
+  padding: 8px 15px;
+  color: #fff;
+  text-decoration: none;
+  text-shadow: 0 0 3px #ff0000;
+  border: 3px solid #6a1b9400;
+
+}
+
+.link:hover,
+.active{
+  cursor: pointer;
+  border: 3px solid #7d4a99;
+  color: #7d4a99;
+  text-shadow: none;
+  transition: 0.4s;
+  border-radius: 3px;
+}
