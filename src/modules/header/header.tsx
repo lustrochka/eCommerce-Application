@@ -12,7 +12,7 @@ type link = {
   element: React.JSX.Element;
 };
 
-const linksArr: link[] = [
+export const linksArr: link[] = [
   {
     text: 'Main',
     path: '/',
@@ -34,7 +34,7 @@ const linksArr: link[] = [
     element: <MainPage />,
   },
 ];
-const loginArr: link[] = [
+export const loginArr: link[] = [
   {
     text: 'Login',
     path: '/login',
@@ -53,31 +53,19 @@ export const Header = () => {
   return (
     <header className="header">
       <nav>
-        <BrowserRouter>
-          <NavLink to="/">Main</NavLink>
-          <NavLink to="/">Catalog</NavLink>
-          <NavLink to="/">About Us</NavLink>
-          <NavLink to="/">Basket</NavLink>
-          <Routes>
-            {linksArr.map((item, index) => (
-              <Route path={item.path} element={item.element} key={index} />
-            ))}
-          </Routes>
-        </BrowserRouter>
+        <NavLink to="/">Main</NavLink>
+        <NavLink to="/">Catalog</NavLink>
+        <NavLink to="/">About Us</NavLink>
+        <NavLink to="/">Basket</NavLink>
       </nav>
       <div className="login-container">
         {isLogin ? (
           <span>Hi, {userName} </span>
         ) : (
-          <BrowserRouter>
+          <>
             <NavLink to="/login">Login</NavLink>
             <NavLink to="/registration">Registration</NavLink>
-            <Routes>
-              {loginArr.map((item, index) => (
-                <Route path={item.path} element={item.element} key={index} />
-              ))}
-            </Routes>
-          </BrowserRouter>
+          </>
         )}
       </div>
     </header>
