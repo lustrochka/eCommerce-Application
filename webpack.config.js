@@ -53,6 +53,9 @@ const baseConfig = {
   stats: {
     children: true,
   },
+  devServer: {
+    historyApiFallback: true,
+  },
 };
 
 module.exports = ({ mode }) => {

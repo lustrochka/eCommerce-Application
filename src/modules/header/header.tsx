@@ -5,6 +5,7 @@ import { LoginPage } from '../main/login-page/loginPage';
 import { RegistrationPage } from '../main/registration-page/registrationPage';
 import './header.scss';
 import { MainPage } from '../main/main-page/mainPage';
+import { CatalogPage } from '../main/catalog -product-page/catalogProductPage';
 
 type link = {
   text: string;
@@ -21,7 +22,7 @@ export const linksArr: link[] = [
   {
     text: 'Catalog',
     path: '/catalog',
-    element: <MainPage />,
+    element: <CatalogPage />,
   },
   {
     text: 'Basket',

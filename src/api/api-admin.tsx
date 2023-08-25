@@ -61,3 +61,7 @@ export async function setDefaultAdress(id: string, actions: CustomerUpdateAction
     .execute();
   console.log(result);
 }
+
+export function showProd() {
+  return apiRoot.products().get().execute();
+}

@@ -33,3 +33,26 @@ html {
 body {
   background-color: #000;
 }
+
+.catalog-page {
+  display: flex;
+  padding: 30px;
+}
+
+.catalog-item {
+  width: 200px;
+  margin-right: 20px;
+  padding: 10px;
+  border: 1px solid grey;
+}
+
+.catalog-img {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.product-title {
+  margin-bottom: 10px;
+  font-weight: bold;
+  font-size: 18px;
+}
