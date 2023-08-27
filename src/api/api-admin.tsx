@@ -65,3 +65,17 @@ export async function setDefaultAdress(id: string, actions: CustomerUpdateAction
 export function showProd() {
   return apiRoot.products().get().execute();
 }
+
+export function sortingProducts(query: string) {
+  let res;
+  if (!query) {
+    res = apiRoot.productProjections().search().get().execute();
+  } else {
+    res = apiRoot
+      .productProjections()
+      .search()
+      .get({ queryArgs: { sort: query } })
+      .execute();
+  }
+  return res;
+}

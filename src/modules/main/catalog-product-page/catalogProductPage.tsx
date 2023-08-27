@@ -1,35 +1,46 @@
 import React from 'react';
-import { showProd } from '../../../api/api-admin';
+import { sortingProducts } from '../../../api/api-admin';
 
 interface ProductData {
-  name: string;
   description: string;
+  name: string;
   image: string;
   price: string;
   discounted: boolean;
   discount: string;
 }
 
-export class CatalogPage extends React.Component<object, { products: ProductData[]; success: boolean }> {
+interface State {
+  query: string;
+  sortPrice: string;
+  sortName: string;
+  products: ProductData[];
+  success: boolean;
+}
+
+export class CatalogPage extends React.Component<object, State> {
   constructor(props: object) {
     super(props);
 
     this.state = {
+      query: '',
+      sortPrice: '',
+      sortName: '',
       products: [],
       success: true,
     };
   }
 
-  componentDidMount() {
-    showProd()
+  changeElements(query: string) {
+    sortingProducts(query)
       .then(({ body }) => {
         const productsArray = body.results;
         const elements = productsArray.map((product) => {
-          const desc = product.masterData.current.description;
+          const desc = product.description;
           const description = desc ? desc['en-US'] : '';
-          const img = product.masterData.current.masterVariant.images;
+          const img = product.masterVariant.images;
           const url = img ? img[0].url : '';
-          const prices = product.masterData.current.masterVariant.prices;
+          const prices = product.masterVariant.prices;
           const priceDollar = prices ? prices[0].value.centAmount / 100 : 0;
           const priceCent = prices ? prices[0].value.centAmount % 100 : 0;
           let discounted = false;
@@ -43,7 +54,7 @@ export class CatalogPage extends React.Component<object, { products: ProductData
             }
           }
           return {
-            name: product.masterData.current.name['en-US'],
+            name: product.name['en-US'],
             description: description,
             image: url,
             price: `$${priceDollar},${priceCent}`,
@@ -52,18 +63,47 @@ export class CatalogPage extends React.Component<object, { products: ProductData
           };
         });
         this.setState({ products: elements });
-        console.log('successs');
       })
       .catch(() => {
         this.setState({ success: false });
       });
   }
 
+  componentDidMount() {
+    this.changeElements('');
+  }
+
   render() {
     return (
       <div className="catalog-page">
-        <h1 className={this.state.success ? 'error-message' : 'visible'}>Sorry, cannot get data now</h1>
+        <div className="sorting-block">
+          <select
+            className="sort-input"
+            value={this.state.sortPrice}
+            onChange={(e) => {
+              this.setState({ query: e.target.value, sortPrice: e.target.value, sortName: '' });
+              this.changeElements(e.target.value);
+            }}
+          >
+            <option value="">Sort by price</option>
+            <option value="price asc">From lowest price</option>
+            <option value="price desc">From highest price</option>
+          </select>
+          <select
+            className="sort-input"
+            value={this.state.sortName}
+            onChange={(e) => {
+              this.setState({ query: e.target.value, sortName: e.target.value, sortPrice: '' });
+              this.changeElements(e.target.value);
+            }}
+          >
+            <option value="">Sort by name</option>
+            <option value="name.en-US asc">A-Z</option>
+            <option value="name.en-US desc">Z-A</option>
+          </select>
+        </div>
         <div className="product-list">
+          <h1 className={this.state.success ? 'error-message' : 'visible'}>Sorry, cannot get data now</h1>
           {this.state.products.map((product) => {
             return (
               <div className="catalog-item">
