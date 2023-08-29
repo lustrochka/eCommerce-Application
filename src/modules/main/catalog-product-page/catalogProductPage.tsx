@@ -1,21 +1,19 @@
 import React from 'react';
 import { sortingProducts } from '../../../api/api-admin';
-
-interface ProductData {
-  description: string;
-  name: string;
-  image: string;
-  price: string;
-  discounted: boolean;
-  discount: string;
-}
+import { ProductList } from './ProductList';
+import { ProductData, QueryType } from '../../../types';
 
 interface State {
-  query: string;
   sortPrice: string;
   sortName: string;
   products: ProductData[];
   success: boolean;
+  minPrice: string;
+  maxPrice: string;
+  brand: string[];
+  colors: string[];
+  storage: string[];
+  ram: string[];
 }
 
 export class CatalogPage extends React.Component<object, State> {
@@ -23,15 +21,20 @@ export class CatalogPage extends React.Component<object, State> {
     super(props);
 
     this.state = {
-      query: '',
       sortPrice: '',
       sortName: '',
       products: [],
       success: true,
+      minPrice: '',
+      maxPrice: '',
+      brand: [],
+      colors: [],
+      storage: [],
+      ram: [],
     };
   }
 
-  changeElements(query: string) {
+  changeElements(query: QueryType) {
     sortingProducts(query)
       .then(({ body }) => {
         const productsArray = body.results;
@@ -69,11 +72,128 @@ export class CatalogPage extends React.Component<object, State> {
       });
   }
 
+  createQuery() {
+    const query: QueryType = {};
+    const filter = [];
+    if (this.state.sortName) query.sort = this.state.sortName;
+    if (this.state.sortPrice) query.sort = this.state.sortPrice;
+    if (this.state.minPrice || this.state.maxPrice) {
+      const min = this.state.minPrice || '*';
+      const max = this.state.maxPrice || '*';
+      filter.push(`variants.price.centAmount:range (${min} to ${max})`);
+    }
+    if (this.state.brand.length > 0) filter.push(`variants.attributes.Brand: ${this.state.brand.join(',')}`);
+    if (this.state.colors.length > 0) filter.push(`variants.attributes.color: ${this.state.colors.join(',')}`);
+    if (this.state.storage.length > 0)
+      filter.push(`variants.attributes.internal-storage: ${this.state.storage.join(',')}`);
+    if (this.state.ram.length > 0) filter.push(`variants.attributes.RAM: ${this.state.ram.join(',')}`);
+    if (filter.length > 0) query.filter = filter;
+    return query;
+  }
+
   componentDidMount() {
-    this.changeElements('');
+    this.changeElements({});
   }
 
   render() {
+    const brands = ['Samsung', 'MacBook'].map((item) => {
+      return (
+        <>
+          <label htmlFor={item}>{item}</label>
+          <input
+            type="checkbox"
+            id={item}
+            value={`${item}`}
+            onChange={(e) => {
+              const value = `"${e.target.value}"`;
+              const index = this.state.brand.indexOf(value);
+
+              if (e.target.checked) {
+                this.setState({ brand: [...this.state.brand, value] }, () => this.changeElements(this.createQuery()));
+              } else {
+                this.setState(
+                  { brand: [...this.state.brand.slice(0, index), ...this.state.brand.slice(index + 1)] },
+                  () => this.changeElements(this.createQuery())
+                );
+              }
+            }}
+          />
+        </>
+      );
+    });
+    const colors = ['black', 'silver', 'lavender'].map((item) => {
+      return (
+        <div>
+          <label htmlFor={item}>{item}</label>
+          <input
+            type="checkbox"
+            id={item}
+            value={`${item}`}
+            onChange={(e) => {
+              const value = `"${e.target.value}"`;
+              const index = this.state.colors.indexOf(value);
+              if (e.target.checked) {
+                this.setState({ colors: [...this.state.colors, value] }, () => this.changeElements(this.createQuery()));
+              } else {
+                this.setState(
+                  { colors: [...this.state.colors.slice(0, index), ...this.state.colors.slice(index + 1)] },
+                  () => this.changeElements(this.createQuery())
+                );
+              }
+            }}
+          />
+        </div>
+      );
+    });
+    const storage = [64, 256, 512].map((item) => {
+      return (
+        <div>
+          <label htmlFor={item.toString()}>{item}GB</label>
+          <input
+            type="checkbox"
+            id={item.toString()}
+            value={`${item}`}
+            onChange={(e) => {
+              const index = this.state.storage.indexOf(e.target.value);
+              if (e.target.checked) {
+                this.setState({ storage: [...this.state.storage, e.target.value] }, () =>
+                  this.changeElements(this.createQuery())
+                );
+              } else {
+                this.setState(
+                  { storage: [...this.state.storage.slice(0, index), ...this.state.storage.slice(index + 1)] },
+                  () => this.changeElements(this.createQuery())
+                );
+              }
+            }}
+          />
+        </div>
+      );
+    });
+    const ram = [4, 8, 16].map((item) => {
+      return (
+        <div>
+          <label htmlFor={item.toString()}>{item}GB</label>
+          <input
+            type="checkbox"
+            id={item.toString()}
+            value={`${item}`}
+            onChange={(e) => {
+              const index = this.state.ram.indexOf(e.target.value);
+              if (e.target.checked) {
+                this.setState({ ram: [...this.state.brand, e.target.value] }, () =>
+                  this.changeElements(this.createQuery())
+                );
+              } else {
+                this.setState({ ram: [...this.state.brand.slice(0, index), ...this.state.ram.slice(index + 1)] }, () =>
+                  this.changeElements(this.createQuery())
+                );
+              }
+            }}
+          />
+        </div>
+      );
+    });
     return (
       <div className="catalog-page">
         <div className="sorting-block">
@@ -81,8 +201,8 @@ export class CatalogPage extends React.Component<object, State> {
             className="sort-input"
             value={this.state.sortPrice}
             onChange={(e) => {
-              this.setState({ query: e.target.value, sortPrice: e.target.value, sortName: '' });
-              this.changeElements(e.target.value);
+              this.setState({ sortPrice: e.target.value, sortName: '' });
+              this.changeElements(this.createQuery());
             }}
           >
             <option value="">Sort by price</option>
@@ -93,8 +213,8 @@ export class CatalogPage extends React.Component<object, State> {
             className="sort-input"
             value={this.state.sortName}
             onChange={(e) => {
-              this.setState({ query: e.target.value, sortName: e.target.value, sortPrice: '' });
-              this.changeElements(e.target.value);
+              this.setState({ sortName: e.target.value, sortPrice: '' });
+              this.changeElements(this.createQuery());
             }}
           >
             <option value="">Sort by name</option>
@@ -102,19 +222,50 @@ export class CatalogPage extends React.Component<object, State> {
             <option value="name.en-US desc">Z-A</option>
           </select>
         </div>
-        <div className="product-list">
-          <h1 className={this.state.success ? 'error-message' : 'visible'}>Sorry, cannot get data now</h1>
-          {this.state.products.map((product) => {
-            return (
-              <div className="catalog-item">
-                <div className="product-title">{product.name}</div>
-                <div>{product.description}</div>
-                <img src={product.image} alt="" className="catalog-img" />
-                <div className={product.discounted ? 'crossed' : ''}>{product.price}</div>
-                <div>{product.discount}</div>
+        <h1 className={this.state.success ? 'error-message' : 'visible'}>Sorry, cannot get data now</h1>
+        <div className="catalog-main-block">
+          <div className="filters">
+            <div className="filter-item">
+              <div>Price</div>
+              <div>
+                <input
+                  type="number"
+                  placeholder="from"
+                  onInput={(e) => {
+                    this.setState({ minPrice: e.currentTarget.value ? `${e.currentTarget.value}00` : '' }, () =>
+                      this.changeElements(this.createQuery())
+                    );
+                  }}
+                />
+                <input
+                  type="number"
+                  placeholder="to"
+                  onInput={(e) => {
+                    this.setState({ maxPrice: e.currentTarget.value ? `${e.currentTarget.value}00` : '' }, () =>
+                      this.changeElements(this.createQuery())
+                    );
+                  }}
+                />
               </div>
-            );
-          })}
+            </div>
+            <div className="filter-item">
+              <div>Brand</div>
+              {brands}
+            </div>
+            <div className="filter-item">
+              <div>Color</div>
+              {colors}
+            </div>
+            <div className="filter-item">
+              <div>storage</div>
+              {storage}
+            </div>
+            <div className="filter-item">
+              <div>ram</div>
+              {ram}
+            </div>
+          </div>
+          <ProductList products={this.state.products} />
         </div>
       </div>
     );

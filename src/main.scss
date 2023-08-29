@@ -44,6 +44,25 @@ body {
   background-color: gray;
 }
 
+.catalog-main-block {
+  display: flex;
+}
+
+.filters {
+  max-width: 110px;
+  margin-right: 40px;
+  & input {
+    max-width: 100px;
+  }
+}
+
+.filter-item {
+  background-color: gray;
+  color: black;
+  margin-bottom: 15px;
+  padding: 2px;
+}
+
 .product-list {
   max-width: 1000px;
   margin: 0 auto;
