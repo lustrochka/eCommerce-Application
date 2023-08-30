@@ -80,3 +80,7 @@ export function sortingProducts(query: QueryType) {
 /*export function f() {
   console.log(apiRoot.productProjections().search().get({queryArgs:{filter: 'variants.price.centAmount:range (to 150000)'}}).execute())
 }*/
+
+export function showCategory() {
+  return apiRoot.categories().get().execute();
+}

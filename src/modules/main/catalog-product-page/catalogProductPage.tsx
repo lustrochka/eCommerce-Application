@@ -1,7 +1,8 @@
 import React from 'react';
-import { sortingProducts } from '../../../api/api-admin';
+import { showCategory, sortingProducts } from '../../../api/api-admin';
 import { ProductList } from './ProductList';
 import { ProductData, QueryType } from '../../../types';
+import { NavLink } from 'react-router-dom';
 
 interface State {
   sortPrice: string;
@@ -14,10 +15,12 @@ interface State {
   colors: string[];
   storage: string[];
   ram: string[];
+  categories: string[];
+  catId: string;
 }
 
-export class CatalogPage extends React.Component<object, State> {
-  constructor(props: object) {
+export class CatalogPage extends React.Component<{ type: string }, State> {
+  constructor(props: { type: string }) {
     super(props);
 
     this.state = {
@@ -31,6 +34,8 @@ export class CatalogPage extends React.Component<object, State> {
       colors: [],
       storage: [],
       ram: [],
+      categories: [],
+      catId: '',
     };
   }
 
@@ -72,6 +77,23 @@ export class CatalogPage extends React.Component<object, State> {
       });
   }
 
+  renderCategory() {
+    showCategory()
+      .then(({ body }) => {
+        const categoryArray = body.results.map((item) => {
+          if (item.name['en-US'].toLowerCase() === this.props.type) {
+            this.setState({ catId: item.id });
+          }
+          return item.name['en-US'];
+        });
+        this.setState({ categories: categoryArray });
+        this.changeElements(this.createQuery());
+      })
+      .catch(() => {
+        this.setState({ categories: ['Cannot load data'] });
+      });
+  }
+
   createQuery() {
     const query: QueryType = {};
     const filter = [];
@@ -87,12 +109,13 @@ export class CatalogPage extends React.Component<object, State> {
     if (this.state.storage.length > 0)
       filter.push(`variants.attributes.internal-storage: ${this.state.storage.join(',')}`);
     if (this.state.ram.length > 0) filter.push(`variants.attributes.RAM: ${this.state.ram.join(',')}`);
+    if (this.state.catId) filter.push(`categories.id: "${this.state.catId}"`);
     if (filter.length > 0) query.filter = filter;
     return query;
   }
 
   componentDidMount() {
-    this.changeElements({});
+    this.renderCategory();
   }
 
   render() {
@@ -194,6 +217,13 @@ export class CatalogPage extends React.Component<object, State> {
         </div>
       );
     });
+    const categories = this.state.categories.map((item) => {
+      return (
+        <NavLink className="category" to={`/catalog/${item.toLowerCase()}`} reloadDocument>
+          <div>{item}</div>
+        </NavLink>
+      );
+    });
     return (
       <div className="catalog-page">
         <div className="sorting-block">
@@ -201,8 +231,7 @@ export class CatalogPage extends React.Component<object, State> {
             className="sort-input"
             value={this.state.sortPrice}
             onChange={(e) => {
-              this.setState({ sortPrice: e.target.value, sortName: '' });
-              this.changeElements(this.createQuery());
+              this.setState({ sortPrice: e.target.value, sortName: '' }, () => this.changeElements(this.createQuery()));
             }}
           >
             <option value="">Sort by price</option>
@@ -213,8 +242,7 @@ export class CatalogPage extends React.Component<object, State> {
             className="sort-input"
             value={this.state.sortName}
             onChange={(e) => {
-              this.setState({ sortName: e.target.value, sortPrice: '' });
-              this.changeElements(this.createQuery());
+              this.setState({ sortName: e.target.value, sortPrice: '' }, () => this.changeElements(this.createQuery()));
             }}
           >
             <option value="">Sort by name</option>
@@ -266,6 +294,7 @@ export class CatalogPage extends React.Component<object, State> {
             </div>
           </div>
           <ProductList products={this.state.products} />
+          <div className="filter-item">{categories}</div>
         </div>
       </div>
     );
