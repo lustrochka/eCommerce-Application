@@ -1,5 +1,6 @@
 import React from 'react';
 import { ProductData } from '../../../types';
+import { NavLink } from 'react-router-dom';
 
 export class ProductList extends React.Component<{ products: ProductData[] }> {
   constructor(props: { products: ProductData[] }) {
@@ -17,6 +18,7 @@ export class ProductList extends React.Component<{ products: ProductData[] }> {
               <img src={product.image} alt="" className="catalog-img" />
               <div className={product.discounted ? 'crossed' : ''}>{product.price}</div>
               <div>{product.discount}</div>
+              <NavLink to={`/catalog/${product.category}/${product.id}`}>See more</NavLink>
             </div>
           );
         })}

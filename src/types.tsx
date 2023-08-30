@@ -7,6 +7,8 @@ export interface ProductData {
   price: string;
   discounted: boolean;
   discount: string;
+  category: string;
+  id: string;
 }
 
 export interface QueryType {

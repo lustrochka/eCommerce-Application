@@ -15,7 +15,7 @@ interface State {
   colors: string[];
   storage: string[];
   ram: string[];
-  categories: string[];
+  categories: { [key: string]: string };
   catId: string;
 }
 
@@ -34,7 +34,7 @@ export class CatalogPage extends React.Component<{ type: string }, State> {
       colors: [],
       storage: [],
       ram: [],
-      categories: [],
+      categories: {},
       catId: '',
     };
   }
@@ -68,6 +68,8 @@ export class CatalogPage extends React.Component<{ type: string }, State> {
             price: `$${priceDollar},${priceCent}`,
             discounted: discounted,
             discount: discount,
+            category: this.state.categories[product.categories[0].id].toLowerCase(),
+            id: product.id,
           };
         });
         this.setState({ products: elements });
@@ -80,17 +82,18 @@ export class CatalogPage extends React.Component<{ type: string }, State> {
   renderCategory() {
     showCategory()
       .then(({ body }) => {
-        const categoryArray = body.results.map((item) => {
+        const categoryArray: { [key: string]: string } = {};
+        body.results.forEach((item) => {
           if (item.name['en-US'].toLowerCase() === this.props.type) {
             this.setState({ catId: item.id });
           }
-          return item.name['en-US'];
+          categoryArray[item.id] = item.name['en-US'];
         });
         this.setState({ categories: categoryArray });
         this.changeElements(this.createQuery());
       })
       .catch(() => {
-        this.setState({ categories: ['Cannot load data'] });
+        this.setState({ categories: { key: 'Cannot load data' } });
       });
   }
 
@@ -217,7 +220,7 @@ export class CatalogPage extends React.Component<{ type: string }, State> {
         </div>
       );
     });
-    const categories = this.state.categories.map((item) => {
+    const categories = Object.values(this.state.categories).map((item) => {
       return (
         <NavLink className="category" to={`/catalog/${item.toLowerCase()}`} reloadDocument>
           <div>{item}</div>
