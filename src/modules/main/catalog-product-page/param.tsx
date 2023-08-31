@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { CatalogPage } from './catalogProductPage';
 
 export function Param() {
-  const { name } = useParams();
-  const param = name ? name : '';
+  const { category } = useParams();
+  const param = category ? category : '';
   return <CatalogPage type={param} />;
 }

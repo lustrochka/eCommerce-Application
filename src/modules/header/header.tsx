@@ -28,12 +28,12 @@ export const linksArr: link[] = [
   },
   {
     text: 'Catalog',
-    path: '/catalog/:name',
+    path: '/catalog/:category',
     element: <Param />,
   },
   {
     text: 'Catalog',
-    path: '/catalog/:name/:id',
+    path: '/catalog/:category/:id',
     element: <DetailedPage />,
   },
   {

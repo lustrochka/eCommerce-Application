@@ -84,3 +84,7 @@ export function sortingProducts(query: QueryType) {
 export function showCategory() {
   return apiRoot.categories().get().execute();
 }
+
+export function getProduct(id: string) {
+  return apiRoot.products().withId({ ID: id }).get().execute();
+}
