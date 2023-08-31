@@ -13,6 +13,7 @@ const baseConfig = {
   output: {
     path: path.join(__dirname, 'dist'),
     filename: 'index.js',
+    publicPath: '/',
     assetModuleFilename: 'assets/[name][ext]',
   },
   module: {
@@ -52,6 +53,9 @@ const baseConfig = {
   ],
   stats: {
     children: true,
+  },
+  devServer: {
+    historyApiFallback: true,
   },
 };
 

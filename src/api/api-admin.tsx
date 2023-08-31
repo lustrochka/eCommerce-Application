@@ -5,6 +5,7 @@ import {
   CustomerUpdateAction,
   createApiBuilderFromCtpClient,
 } from '@commercetools/platform-sdk';
+import { QueryType } from '../types';
 
 // Configure authMiddlewareOptions
 const authMiddlewareOptions: AuthMiddlewareOptions = {
@@ -60,4 +61,30 @@ export async function setDefaultAdress(id: string, actions: CustomerUpdateAction
     })
     .execute();
   console.log(result);
+}
+
+export function showProd() {
+  return apiRoot.products().get().execute();
+}
+
+export function sortingProducts(query: QueryType) {
+  let res;
+  if (!query) {
+    res = apiRoot.productProjections().search().get().execute();
+  } else {
+    res = apiRoot.productProjections().search().get({ queryArgs: query }).execute();
+  }
+  return res;
+}
+
+/*export function f() {
+  console.log(apiRoot.productProjections().search().get({queryArgs:{filter: 'variants.price.centAmount:range (to 150000)'}}).execute())
+}*/
+
+export function showCategory() {
+  return apiRoot.categories().get().execute();
+}
+
+export function getProduct(id: string) {
+  return apiRoot.products().withId({ ID: id }).get().execute();
 }
