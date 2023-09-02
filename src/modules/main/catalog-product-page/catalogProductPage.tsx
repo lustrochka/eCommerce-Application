@@ -122,7 +122,7 @@ export class CatalogPage extends React.Component<{ type: string }, State> {
   }
 
   render() {
-    const brands = ['Samsung', 'MacBook'].map((item) => {
+    const brands = ['Samsung', 'MacBook', 'Asus'].map((item) => {
       return (
         <>
           <label htmlFor={item}>{item}</label>
@@ -147,7 +147,7 @@ export class CatalogPage extends React.Component<{ type: string }, State> {
         </>
       );
     });
-    const colors = ['black', 'silver', 'lavender'].map((item) => {
+    const colors = ['black', 'silver', 'lavender', 'white'].map((item) => {
       return (
         <div>
           <label htmlFor={item}>{item}</label>
@@ -171,7 +171,7 @@ export class CatalogPage extends React.Component<{ type: string }, State> {
         </div>
       );
     });
-    const storage = [64, 256, 512].map((item) => {
+    const storage = [64, 128, 256, 512].map((item) => {
       return (
         <div>
           <label htmlFor={item.toString()}>{item}GB</label>
@@ -297,7 +297,7 @@ export class CatalogPage extends React.Component<{ type: string }, State> {
             </div>
           </div>
           <ProductList products={this.state.products} />
-          <div className="filter-item">{categories}</div>
+          <div className="filter-item categories">{categories}</div>
         </div>
       </div>
     );
