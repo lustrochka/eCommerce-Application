@@ -88,3 +88,11 @@ export function showCategory() {
 export function getProduct(id: string) {
   return apiRoot.products().withId({ ID: id }).get().execute();
 }
+
+export function a() {
+  apiRoot
+    .me()
+    .login()
+    .post({ body: { email: 'aaa@mail.ru', password: 'aaa111' } })
+    .execute();
+}

@@ -1,8 +1,8 @@
 import React from 'react';
-import { showCategory, sortingProducts } from '../../../api/api-admin';
+import { a, showCategory, sortingProducts } from '../../../api/api-admin';
 import { ProductList } from './ProductList';
 import { ProductData, QueryType } from '../../../types';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Navigate } from 'react-router-dom';
 
 interface State {
   sortPrice: string;
@@ -17,6 +17,7 @@ interface State {
   ram: string[];
   categories: { [key: string]: string };
   catId: string;
+  clicked: [boolean, boolean];
 }
 
 export class CatalogPage extends React.Component<{ type: string }, State> {
@@ -36,6 +37,7 @@ export class CatalogPage extends React.Component<{ type: string }, State> {
       ram: [],
       categories: {},
       catId: '',
+      clicked: [false, false],
     };
   }
 
@@ -89,8 +91,7 @@ export class CatalogPage extends React.Component<{ type: string }, State> {
           }
           categoryArray[item.id] = item.name['en-US'];
         });
-        this.setState({ categories: categoryArray });
-        this.changeElements(this.createQuery());
+        this.setState({ categories: categoryArray }, () => this.changeElements(this.createQuery()));
       })
       .catch(() => {
         this.setState({ categories: { key: 'Cannot load data' } });
@@ -220,15 +221,30 @@ export class CatalogPage extends React.Component<{ type: string }, State> {
         </div>
       );
     });
-    const categories = Object.values(this.state.categories).map((item) => {
+    const categories = Object.values(this.state.categories).map((item, index) => {
       return (
-        <NavLink className="category" to={`/catalog/${item.toLowerCase()}`} reloadDocument>
+        <div
+          className="category"
+          onClick={() => {
+            this.renderCategory();
+            const array = [false, false];
+            array[index] = true;
+            this.setState({ clicked: array as [boolean, boolean] });
+          }}
+        >
           <div>{item}</div>
-        </NavLink>
+          {this.state.clicked[index] && <Navigate to={`/catalog/${item.toLowerCase()}`} />}
+        </div>
       );
     });
     return (
       <div className="catalog-page">
+        <div className={this.props.type ? 'display catalog-route' : 'catalog-route'}>
+          <NavLink className="product-link" to={'/catalog'}>
+            catalog/
+          </NavLink>
+          <span>{this.props.type}</span>
+        </div>
         <div className="sorting-block">
           <select
             className="sort-input"

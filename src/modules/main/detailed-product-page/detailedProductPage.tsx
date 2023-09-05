@@ -44,8 +44,16 @@ export function DetailedPage() {
       });
   }, []);
 
-  const urls = images.map((url) => (
-    <img src={url} className="product-img" onClick={() => setClasslist('modal-window display')}></img>
+  const urls = images.map((url, index) => (
+    <img
+      src={url}
+      className="product-img"
+      onClick={() => {
+        setValue(`${index}`);
+        setStyle({ transform: 'translateX(' + `-${430 * index}px` + ')' });
+        setClasslist('modal-window display');
+      }}
+    ></img>
   ));
 
   return (
